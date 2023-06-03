@@ -32,9 +32,9 @@ sudokuBoard = SudokuBoard(grids, 3, 3)
 agentX = Agent()
 startView = StartView()
 gridView = GridView()
-mainController = MainController(startView, gridView, grid, agentX)
+mainController = MainController(startView, gridView, sudokuBoard, agentX)
 
-mainController.run()
+print(mainController.run())
 
 # [ ][ ][3]
 

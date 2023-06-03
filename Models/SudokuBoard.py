@@ -2,7 +2,6 @@ from Models.Cell import Cell
 from Models.Grid import Grid
 
 class SudokuBoard:
-    EMPTY = " "
 
     def __init__(self, grids:list, rows:int, columns:int):
         self.rows = rows

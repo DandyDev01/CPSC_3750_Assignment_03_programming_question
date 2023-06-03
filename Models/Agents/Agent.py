@@ -2,6 +2,7 @@ import math
 import random
 from Models.Grid import Grid
 from Models.Node import Node
+from Models.SudokuBoard import SudokuBoard
 from Models.Tree import Tree
 from Views.GridView import GridView
 
@@ -25,13 +26,13 @@ class Agent:
     def __init__ (self):
         return None
 
-    def make_move(self, grid:Grid):
-        return self.all_different(grid.get_values())
+    def make_move(self, board:SudokuBoard):
+        return self.back_tracking_search(board)
 
-    def back_tracking_search(self):
-        return self.back_track()
+    def back_tracking_search(self, board:SudokuBoard):
+        return self.back_track(board)
 
-    def back_track(sefl, list, CSP):
+    def back_track(self, board:SudokuBoard):
         return None
 
     def find(self, node:Node, goal:Node):
@@ -40,6 +41,10 @@ class Agent:
     def all_different(self, list:list):
         seen = []
         for i in range(0, len(list)):
+            #ignore empty cells
+            if list[i] == " ":
+                continue
+
             if list[i] in seen:
                 return False
             else:
