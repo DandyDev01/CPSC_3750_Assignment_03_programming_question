@@ -1,20 +1,15 @@
 from Models.Cell import Cell
+from Models.Grid import Grid
 
-class Grid:
+class SudokuBoard:
     EMPTY = " "
 
-    def __init__(self, initialState:list, rows:int, columns:int, xPos:int, yPos:int):
-        self.xPos = xPos
-        self.yPos = yPos
+    def __init__(self, grids:list, rows:int, columns:int):
         self.rows = rows
         self.columns = columns
-        self.cells = []
+        self.cells = grids
         self.SIZE = rows * columns
         k = 0
-        for i in range(0, self.rows):
-            for j in range(0, self.columns):
-                self.cells.append(Cell(i, j, initialState[k]))
-                k = k + 1
 
     # finds the cell at a given row column combination
     # @param row: row of cell wanted
@@ -34,16 +29,6 @@ class Grid:
 
         copy = Grid(values)
         return copy
-    
-    # finds the empty cells
-    # @returns: the empty cells
-    def get_empty_cells(self):
-        emptyCells = []
-        for i in range(0, self.SIZE):
-            if self.cells[i].value == self.EMPTY:
-                emptyCells.append(self.cells[i])
-        
-        return emptyCells
     
     # finds all the neighbours of the specified cell
     # @param cell: cell to get the neighbours of
@@ -91,7 +76,10 @@ class Grid:
     def get_row(self, row:int):
         list = []
         for i in range(0, self.columns):
-            list.append(self.getCell(row, i).value)
+            cell = self.getCell(self.convert(row), i)
+            for j in range(0, cell.columns):
+                x = self.convert_row(row)
+                list.append(cell.getCell(cell.rows-x-1, j).value)
 
         return list
 
@@ -101,15 +89,24 @@ class Grid:
     def get_column(self, column:int):
         list = []
         for i in range(0, self.rows):
-            list.append(self.getCell(i, column))
+            cell = self.getCell(i, self.convert(column))
+            for j in range(0, cell.rows):
+                list.append(cell.getCell(cell.rows -1-j, self.convert_row(column)).value)
 
         return list
 
-    # creates and returns a collection of the values in the same sequence
-    #@ returns: collection of the values in the grid
-    def get_values(self):
-        values = []
-        for i in range(0, self.SIZE):
-            values.append(self.cells[i].value)
+    def convert(self, num:int):
+        if num == 0 or num ==1 or num ==2:
+            return 0
+        elif num == 3 or num ==4 or num ==5:
+            return 1
+        elif num == 6 or num ==7 or num ==8:
+            return 2
 
-        return values
+    def convert_row(self, num:int):
+        if num == 0 or num ==3 or num ==6:
+            return 0
+        elif num == 1 or num ==4 or num ==7:
+            return 1
+        elif num == 2 or num ==5 or num ==8:
+            return 2
