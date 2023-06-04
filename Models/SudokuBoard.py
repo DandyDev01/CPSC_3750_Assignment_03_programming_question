@@ -73,26 +73,45 @@ class SudokuBoard:
     # @param row: the row to get values from
     # returns: list of values in given row
     def get_row(self, row:int):
-        list = []
+        lst = []
         for i in range(0, self.columns):
             cell = self.getCell(self.convert(row), i)
             for j in range(0, cell.columns):
                 x = self.convert_row(row)
-                list.append(cell.getCell(cell.rows-x-1, j).value)
+                lst.append(cell.getCell(cell.rows-x-1, j).value)
 
-        return list
+        return lst
 
     # retuns a list of all values in a given column
     # @param column: the column to get values from
     # returns: list of values in given column
     def get_column(self, column:int):
-        list = []
+        lst = []
         for i in range(0, self.rows):
             cell = self.getCell(i, self.convert(column))
             for j in range(0, cell.rows):
-                list.append(cell.getCell(cell.rows -1-j, self.convert_row(column)).value)
+                lst.append(cell.getCell(cell.rows -1-j, self.convert_row(column)).value)
 
-        return list
+        return lst
+
+    def get_empty_in_row(self, row:int):
+        lst = []
+        for i in range(0, self.columns):
+            cell = self.getCell(self.convert(row), i)
+            for j in range(0, cell.columns):
+                x = self.convert_row(row)
+                if cell.getCell(cell.rows-x-1, j).value == " ":
+                    lst.append(cell.getCell(cell.rows-x-1, j))
+
+        return lst
+
+
+    def is_complete(self):
+        for i in range(0, len(self.cells)):
+            if len(self.cells[i].get_empty_cells()) > 0:
+                return False
+        
+        return True
 
     def convert(self, num:int):
         if num == 0 or num ==1 or num ==2:
