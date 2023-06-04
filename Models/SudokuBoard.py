@@ -21,7 +21,7 @@ class SudokuBoard:
 
     def get_cell(self, row:int, column:int) -> Cell:
         grid = self.get_grid(self.convert(row), self.convert(column))
-        return grid.getCell(self.convert(row), self.convert(column))
+        return grid.getCell(grid.rows-self.convert_row(row)-1, self.convert_row(column))
 
     # creates a copy of the grid
     # @returns: new grid with the same cell/value sequence
@@ -109,13 +109,10 @@ class SudokuBoard:
 
         return lst
 
-    def get_grid_with_cell(self, row:int, cell:Cell):
-        for i in range(0, self.columns):
-            grid = self.get_grid(self.convert(row), i)
-            for j in range(0, grid.columns):
-                x = self.convert_row(row)
-                if grid.getCell(grid.rows-x-1, j) == cell:
-                    return grid
+    def get_grid_with_cell(self, cell:Cell):
+        for i in range(0, 9):
+            if cell in self.cells[i].cells:
+                return self.cells[i]
 
     def is_complete(self):
         for i in range(0, len(self.cells)):

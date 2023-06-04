@@ -1,10 +1,5 @@
-import math
-import random
 from Models.Grid import Grid
-from Models.Node import Node
 from Models.SudokuBoard import SudokuBoard
-from Models.Tree import Tree
-from Views.GridView import GridView
 from Views.SudokuView import SudokuView
 
 # global constraint Alldiff - all the variables involved in the 
@@ -22,7 +17,6 @@ from Views.SudokuView import SudokuView
 # row / column domain 1 to 9 : x != xi
 # total 27 different alldiff constraints, one for each row, col, 3x3 box
 
-
 class Agent:
 
     def __init__(self):
@@ -32,64 +26,44 @@ class Agent:
         return self.back_tracking_search(board)
 
     def back_tracking_search(self, board:SudokuBoard):
-        return self.back_track(board, 0)
+        return self.back_track(board)
 
-    def back_track(self, board:SudokuBoard, row:int):
-        # print(self.get_unused_in_row(board, 0))
-        # print(self.get_unused_in_column(board, 0))
-        # print(self.get_unused_in_cell(board, board.convert(0), board.convert(0)))
-        # print(self.most_constrained_variable_values(board, 0, 0))
+    def back_track(self, board:SudokuBoard):
         sudokuView = SudokuView()
-        # sudokuView.display(board)
-        self.count += 1
-        # if self.count > 965:
-        #     print("")
-
         if board.is_complete():
             return board
 
-        # unusedValues = self.most_constrained_variable_values(board, row, 0)
-        emptyCellsInRow = board.get_empty_in_row(row)
-        
-        if len(emptyCellsInRow) == 0:
-                # sudokuView.display(board)
-                return self.back_track(board, row + 1)
-
-        if board.get_cell(0, 7).value == "5" and board.get_cell(0, 8).value == "7":
-            print()
-
-        for i in range(0, len(emptyCellsInRow)):
-            grid = board.get_grid_with_cell(row, emptyCellsInRow[i])
-            col = self.get_col(grid.yPos, emptyCellsInRow[i].yPos)
-            domainOfCell = self.most_constrained_variable_values(board, row, col)
-            for j in range(0, len(domainOfCell)):
-                emptyCellsInRow[i].value = domainOfCell[j]
-                if self.valid_move(board, grid):
-                    result = self.back_track(board, row)
-                    sudokuView.display(board)
-                    if result is not None and self.valid_move(result):
-                        return result
-
-                emptyCellsInRow[i].value = " "
+        domainOfCell, cell = self.get_cell_with_smallest_domain(board)
+        grid = board.get_grid_with_cell(cell)
+        for j in range(0, len(domainOfCell)):
+            cell.value = domainOfCell[j]
+            if self.valid_move(board, grid):
+                result = self.back_track(board)
+                sudokuView.display(board)
+                if result is not None and self.valid_move(result):
+                    return result
 
         return None
 
-        # for i in range(0, len(unusedValues)):
-        #     for j in range(0, len(emptyCellsInRow)):
-        #         emptyCellsInRow[j].value = unusedValues[i]
-        #         if self.valid_move(board):
-        #             if len(emptyCellsInRow) == 0:
-        #                 sudokuView.display(board)
-        #                 row += 1
-        #             result = self.back_track(board, row, col+1)
-        #             if result is not None and self.valid_move(result):
-        #                 return result
+    def get_cell_with_smallest_domain(self, board:SudokuBoard):
+        pair = [0, 0]
+        domain = self.most_constrained_variable_values(board, pair[0], pair[1])
+        shortestLength = len(domain)
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if board.get_cell(i,j).value != " ":
+                    continue
 
-        #         emptyCellsInRow[j].value = " "
+                temp = self.most_constrained_variable_values(board, i, j)
+                if len(temp) < shortestLength:
+                    pair[0] = i
+                    pair[1] = j
+                    domain = temp
+                    shortestLength = len(self.most_constrained_variable_values(board, pair[0], pair[1]))
 
-        # return None
+        return domain, board.get_cell(pair[0], pair[1])
 
-    def get_col(self, gridPos:int, cellPos:int):
+    def get_col(self, gridPos:int, cellPos:int) -> int:
         if gridPos == 0 and cellPos == 0:
             return 0
         elif gridPos == 0 and cellPos == 1:
@@ -109,7 +83,7 @@ class Agent:
         elif gridPos == 2 and cellPos == 2:
             return 8
 
-    def valid_move(self, board:SudokuBoard, grid:Grid):
+    def valid_move(self, board:SudokuBoard, grid:Grid) -> bool:
         for i in range(0, 9):
             if self.all_different(board.get_row(i)) == False:
                 return False
@@ -123,7 +97,7 @@ class Agent:
 
         return True
 
-    def all_different(self, lst:list):
+    def all_different(self, lst:list) -> bool:
         seen = []
         for i in range(0, len(lst)):
             #ignore empty cells
@@ -137,7 +111,7 @@ class Agent:
 
         return True
 
-    def get_unused_in_row(self, board:SudokuBoard, row:int):
+    def get_unused_in_row(self, board:SudokuBoard, row:int) -> list[str]:
         domain = ["1","2","3","4","5","6","7","8","9"]
         boardRow = board.get_row(row)
         results = []
@@ -147,7 +121,7 @@ class Agent:
 
         return results
 
-    def get_unused_in_column(self, board:SudokuBoard, col:int):
+    def get_unused_in_column(self, board:SudokuBoard, col:int) ->list[str]:
         domain = ["1","2","3","4","5","6","7","8","9"]
         boardCol = board.get_column(col)
         results = []
@@ -157,7 +131,7 @@ class Agent:
 
         return results
 
-    def get_unused_in_cell(self, board:SudokuBoard, row:int, col:int):
+    def get_unused_in_cell(self, board:SudokuBoard, row:int, col:int) -> list[str]:
         grid = board.get_grid(row, col)
         domain = ["1","2","3","4","5","6","7","8","9"]
         results = []
@@ -167,8 +141,7 @@ class Agent:
 
         return results
 
-
-    def most_constrained_variable_values(self, board:SudokuBoard, row:int, col:int):
+    def most_constrained_variable_values(self, board:SudokuBoard, row:int, col:int) -> list[str]:
         rowSet = set(self.get_unused_in_row(board, row))
         colSet = set(self.get_unused_in_column(board, col))
         cellSet = set(self.get_unused_in_cell(board, board.convert(row), board.convert(col)))
