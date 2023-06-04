@@ -14,10 +14,14 @@ class SudokuBoard:
     # @param row: row of cell wanted
     # @param column: column of cell wanted
     # @returns: cell at specified location
-    def getCell(self, row:int, column:int):
+    def get_grid(self, row:int, column:int) -> Grid:
         for i in range(0,len(self.cells)):
             if self.cells[i].xPos == row and self.cells[i].yPos == column:
                 return self.cells[i]
+
+    def get_cell(self, row:int, column:int) -> Cell:
+        grid = self.get_grid(self.convert(row), self.convert(column))
+        return grid.getCell(self.convert(row), self.convert(column))
 
     # creates a copy of the grid
     # @returns: new grid with the same cell/value sequence
@@ -75,10 +79,10 @@ class SudokuBoard:
     def get_row(self, row:int):
         lst = []
         for i in range(0, self.columns):
-            cell = self.getCell(self.convert(row), i)
-            for j in range(0, cell.columns):
+            grid = self.get_grid(self.convert(row), i)
+            for j in range(0, grid.columns):
                 x = self.convert_row(row)
-                lst.append(cell.getCell(cell.rows-x-1, j).value)
+                lst.append(grid.getCell(grid.rows-x-1, j).value)
 
         return lst
 
@@ -88,23 +92,30 @@ class SudokuBoard:
     def get_column(self, column:int):
         lst = []
         for i in range(0, self.rows):
-            cell = self.getCell(i, self.convert(column))
-            for j in range(0, cell.rows):
-                lst.append(cell.getCell(cell.rows -1-j, self.convert_row(column)).value)
+            grid = self.get_grid(i, self.convert(column))
+            for j in range(0, grid.rows):
+                lst.append(grid.getCell(grid.rows -1-j, self.convert_row(column)).value)
 
         return lst
 
-    def get_empty_in_row(self, row:int):
+    def get_empty_in_row(self, row:int) ->list:
         lst = []
         for i in range(0, self.columns):
-            cell = self.getCell(self.convert(row), i)
-            for j in range(0, cell.columns):
+            grid = self.get_grid(self.convert(row), i)
+            for j in range(0, grid.columns):
                 x = self.convert_row(row)
-                if cell.getCell(cell.rows-x-1, j).value == " ":
-                    lst.append(cell.getCell(cell.rows-x-1, j))
+                if grid.getCell(grid.rows-x-1, j).value == " ":
+                    lst.append(grid.getCell(grid.rows-x-1, j))
 
         return lst
 
+    def get_grid_with_cell(self, row:int, cell:Cell):
+        for i in range(0, self.columns):
+            grid = self.get_grid(self.convert(row), i)
+            for j in range(0, grid.columns):
+                x = self.convert_row(row)
+                if grid.getCell(grid.rows-x-1, j) == cell:
+                    return grid
 
     def is_complete(self):
         for i in range(0, len(self.cells)):
