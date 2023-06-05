@@ -33,17 +33,20 @@ class Agent:
         if board.is_complete():
             return board
 
-        domainOfCell, cell = self.get_cell_with_smallest_domain(board)
-        grid = board.get_grid_with_cell(cell)
-        for j in range(0, len(domainOfCell)):
-            cell.value = domainOfCell[j]
-            if self.valid_move(board, grid):
-                result = self.back_track(board)
-                sudokuView.display(board)
-                if result is not None and self.valid_move(result):
-                    return result
+        empty = board.get_empty()
+        for i in range(0, len(empty)):
+            domainOfCell, cell = self.get_cell_with_smallest_domain(board)
+            grid = board.get_grid_with_cell(cell)
+            print("domain size:" + str(len(domainOfCell)))
+            for j in range(0, len(domainOfCell)):
+                cell.value = domainOfCell[j]
+                if self.valid_move(board, grid):
+                    result = self.back_track(board)
+                    sudokuView.display(board)
+                    if result is not None and self.valid_move(result):
+                        return result
 
-        return None
+            return None
 
     def get_cell_with_smallest_domain(self, board:SudokuBoard):
         pair = [0, 0]

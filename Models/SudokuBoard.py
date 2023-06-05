@@ -98,16 +98,14 @@ class SudokuBoard:
 
         return lst
 
-    def get_empty_in_row(self, row:int) ->list:
-        lst = []
-        for i in range(0, self.columns):
-            grid = self.get_grid(self.convert(row), i)
-            for j in range(0, grid.columns):
-                x = self.convert_row(row)
-                if grid.getCell(grid.rows-x-1, j).value == " ":
-                    lst.append(grid.getCell(grid.rows-x-1, j))
+    def get_empty(self) ->list[Cell]:
+        empty = []
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if self.cells[i].cells[j].value == " ":
+                    empty.append(self.cells[i].cells[j])
 
-        return lst
+        return empty
 
     def get_grid_with_cell(self, cell:Cell):
         for i in range(0, 9):
