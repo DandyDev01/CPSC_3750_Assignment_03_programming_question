@@ -1,10 +1,6 @@
 
-from cgitb import reset
 from Models.Agents.Agent import Agent
-from Models.Cell import Cell
-from Models.Grid import Grid
 from Models.SudokuBoard import SudokuBoard
-from Views.GridView import GridView
 from Views.StartView import StartView
 from Views.SudokuView import SudokuView
 

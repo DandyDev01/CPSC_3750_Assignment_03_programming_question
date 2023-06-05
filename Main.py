@@ -2,7 +2,6 @@ from Controllers.MainController import MainController
 from Models.Agents.Agent import Agent
 from Models.Grid import Grid
 from Models.SudokuBoard import SudokuBoard
-from Views.GridView import GridView
 from Views.StartView import StartView
 from Views.SudokuView import SudokuView
 

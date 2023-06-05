@@ -2,21 +2,6 @@ from Models.Grid import Grid
 from Models.SudokuBoard import SudokuBoard
 from Views.SudokuView import SudokuView
 
-# global constraint Alldiff - all the variables involved in the 
-# constraint must have different values.
-#
-# Domain of variables 1 though 9
-#
-# sudoku rules:
-# no col can have repeat value
-# no row can have repeat value
-# 81 total cells in grid
-# some cells have a filled in value (domain 1 to 9)
-# is a CSP with 81 variables (each cell)
-# empty cell domain 1 to 9
-# row / column domain 1 to 9 : x != xi
-# total 27 different alldiff constraints, one for each row, col, 3x3 box
-
 class Agent:
 
     def make_move(self, board:SudokuBoard):
