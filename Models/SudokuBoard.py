@@ -23,16 +23,6 @@ class SudokuBoard:
         grid = self.get_grid(self.convert(row), self.convert(column))
         return grid.getCell(grid.rows-self.convert_row(row)-1, self.convert_row(column))
 
-    # creates a copy of the grid
-    # @returns: new grid with the same cell/value sequence
-    def copy(self):
-        values = []
-        for i in range(0, self.SIZE):
-            values.append(self.cells[i].value)
-
-        copy = Grid(values)
-        return copy
-    
     # finds all the neighbours of the specified cell
     # @param cell: cell to get the neighbours of
     # @returns: collection of neighbours
