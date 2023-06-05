@@ -17,17 +17,21 @@ class Agent:
         empty = board.get_empty()
         for i in range(0, len(empty)):
             domainOfCell, cell = self.get_cell_with_smallest_domain(board)
-            grid = board.get_grid_with_cell(cell)
+            print(len(domainOfCell))
             if len(domainOfCell) == 0:
-                print()
+                sudokuView = SudokuView()
+                sudokuView.display(board)
+            grid = board.get_grid_with_cell(cell)
             for j in range(0, len(domainOfCell)):
                 cell.value = domainOfCell[j]
+                sudokuView = SudokuView()
+                sudokuView.display(board)
                 if self.valid_move(board, grid):
                     result = self.back_track(board)
                     if result is not None and self.valid_move(result, grid):
                         return result
-
-            return None
+                        
+        return None
 
     # gets the cell on the baord that has the smallest domain
     # @param board: the board to get the cell from
