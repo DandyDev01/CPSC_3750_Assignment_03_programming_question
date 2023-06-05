@@ -18,15 +18,10 @@ class Agent:
         for i in range(0, len(empty)):
             domainOfCell, cell = self.get_cell_with_smallest_domain(board)
 
-            if len(domainOfCell) == 0:
-                return None
-            
             grid = board.get_grid_with_cell(cell)
             
             for j in range(0, len(domainOfCell)):
                 cell.value = domainOfCell[j]
-                # sudokuView = SudokuView()
-                # sudokuView.display(board)
                 if self.valid_move(board, grid):
                     result = self.back_track(board)
                     if result is not None and self.valid_move(result, grid):
