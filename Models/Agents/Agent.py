@@ -19,9 +19,6 @@ from Views.SudokuView import SudokuView
 
 class Agent:
 
-    def __init__(self):
-        self.count = 0
-
     def make_move(self, board:SudokuBoard):
         return self.back_tracking_search(board)
 
@@ -29,15 +26,11 @@ class Agent:
         return self.back_track(board)
 
     def back_track(self, board:SudokuBoard):
-        sudokuView = SudokuView()
         if board.is_complete():
             return board
 
         empty = board.get_empty()
         for i in range(0, len(empty)):
-            self.count += 1
-            if self.count == 27:
-                print()
             domainOfCell, cell = self.get_cell_with_smallest_domain(board)
             grid = board.get_grid_with_cell(cell)
             if len(domainOfCell) == 0:
@@ -51,6 +44,9 @@ class Agent:
 
             return None
 
+    # gets the cell on the baord that has the smallest domain
+    # @param board: the board to get the cell from
+    # @returns: domain and cell with said domain respectivly
     def get_cell_with_smallest_domain(self, board:SudokuBoard):
         pair = [0,0]
         domain = []
@@ -89,6 +85,10 @@ class Agent:
         elif gridPos == 2 and cellPos == 2:
             return 8
 
+    # makes sure the board is in a valid form
+    # @param board: the board to check
+    # @param grid: cell on the board that was changed
+    # @returns weather or not the move was valid
     def valid_move(self, board:SudokuBoard, grid:Grid) -> bool:
         for i in range(0, 9):
             if self.all_different(board.get_row(i)) == False:
@@ -103,6 +103,9 @@ class Agent:
 
         return True
 
+    # CSP function, makes sure all values in list are the same
+    # @param lst: list to make sure all values are unique
+    # @returns weather or not all values in given list are unique
     def all_different(self, lst:list) -> bool:
         seen = []
         for i in range(0, len(lst)):
@@ -117,6 +120,9 @@ class Agent:
 
         return True
 
+    # gets all the unused values in the domain of a row
+    # @param board: the current board
+    # @param row: the row to get unused values for
     def get_unused_in_row(self, board:SudokuBoard, row:int) -> list[str]:
         domain = ["1","2","3","4","5","6","7","8","9"]
         boardRow = board.get_row(row)
@@ -127,6 +133,9 @@ class Agent:
 
         return results
 
+    # gets all the unused values in the domain of a column
+    # @param board: the current board
+    # @param col: the column to get unused values for
     def get_unused_in_column(self, board:SudokuBoard, col:int) ->list[str]:
         domain = ["1","2","3","4","5","6","7","8","9"]
         boardCol = board.get_column(col)
@@ -137,6 +146,10 @@ class Agent:
 
         return results
 
+    # gets all the unused values in the domain of a cell
+    # @param board: the current board
+    # @param col: the column of the cell on the board
+    # @param row: the row of the cell on the board
     def get_unused_in_cell(self, board:SudokuBoard, row:int, col:int) -> list[str]:
         grid = board.get_grid(row, col)
         domain = ["1","2","3","4","5","6","7","8","9"]
