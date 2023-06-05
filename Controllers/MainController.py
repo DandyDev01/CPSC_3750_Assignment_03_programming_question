@@ -27,6 +27,5 @@ class MainController:
             return
 
         self.sudokuView.display(result)
-        print("end")
 
 
